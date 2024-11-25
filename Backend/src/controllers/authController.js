@@ -47,3 +47,42 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Vérifier si l'utilisateur existe
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'Invalid email or password' });
+        }
+
+        // Comparer le mot de passe
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        // Générer un token JWT
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: '1h', // Token valable 1 heure
+        });
+
+        // Répondre avec les données utilisateur et le token
+        res.status(200).json({
+            message: 'Login successful',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+            },
+            token,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+  
