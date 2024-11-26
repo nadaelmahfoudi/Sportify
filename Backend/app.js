@@ -1,10 +1,17 @@
 // app.js
 const express = require('express');
+const cors = require('cors');
 const { connect, PORT } = require('./config/config'); 
 const authRoutes = require('./src/routes/auth');
 
 const app = express();
 
+app.use(cors({
+    origin: 'http://localhost:5173', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+  
 // Middleware pour analyser les données JSON
 app.use(express.json());
 
