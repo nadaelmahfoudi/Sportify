@@ -22,15 +22,13 @@ const userSchema = new mongoose.Schema({
     required: false,
   },
 }, {
-  timestamps: true, // Enregistre la date de création et de mise à jour
+  timestamps: true, 
 });
 
-// Fonction de comparaison du mot de passe
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Création du modèle User
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

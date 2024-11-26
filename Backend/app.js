@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const { connect, PORT } = require('./config/config'); 
 const authRoutes = require('./src/routes/auth');
+const eventRoutes = require('./src/routes/eventRoutes');
 
 const app = express();
 
@@ -12,13 +13,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
   
-// Middleware pour analyser les données JSON
-app.use(express.json());
 
-// Connexion à MongoDB via la méthode connect définie dans config/config.js
+app.use(express.json());
 connect();
 
 app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {
