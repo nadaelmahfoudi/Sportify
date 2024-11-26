@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
+import axios from 'axios'; 
 import Signup from '../assets/Signup.svg';
 
 function Register() {
   const [formData, setFormData] = useState({
-    username: '',
+    name: '', 
     email: '',
     password: '',
     confirmPassword: '',
-    plan: 'free', 
   });
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -22,17 +24,40 @@ function Register() {
     setFormData((prevState) => ({ ...prevState, [id]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage('Passwords do not match!');
       setSuccessMessage('');
-    } else {
-      setErrorMessage('');
-      setSuccessMessage('Registration successful!');
+      return;
+    }
+  
+    try {
+      console.log('Form data being sent:', formData); // Log the form data
+  
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+  
+      if (response.status === 201) {
+        setSuccessMessage('Registration successful! Please log in.');
+        setErrorMessage('');
+        navigate('/login');
+      }
+    } catch (error) {
+      console.log('Error during registration:', error); // Log the error
+      if (error.response && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('An error occurred during registration. Please try again.');
+      }
+      setSuccessMessage('');
     }
   };
+  
 
   return (
     <div>
@@ -81,9 +106,9 @@ function Register() {
                           <input
                             type="text"
                             className="bg-transparent border-b dark:border-gray-200 focus:outline-none focus:border-green-500 text-white text-sm w-full py-2"
-                            id="username"
-                            placeholder="Username"
-                            value={formData.username}
+                            id="name" // Updated ID to match backend field
+                            placeholder="Name"
+                            value={formData.name}
                             onChange={handleInputChange}
                           />
                         </div>

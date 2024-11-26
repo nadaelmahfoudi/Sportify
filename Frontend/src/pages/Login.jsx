@@ -1,10 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Signin from '../assets/Signin.svg';
+import axios from 'axios';
 
 function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+      });
+
+      localStorage.setItem('token', response.data.token);
+      navigate('/dashboard');
+
+    } catch (err) {
+      // Handle errors
+      setError(err.response?.data?.message || 'An error occurred. Please try again.');
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -32,7 +58,7 @@ function Login() {
                       <h2 className="text-3xl md:text-[45px] font-bold mb-2 text-white">
                         Login
                       </h2>
-                      <form className="mt-6">
+                      <form onSubmit={handleSubmit} className="mt-6">
                         <div className="w-full relative mb-6">
                           <input
                             type="email"
@@ -40,6 +66,8 @@ function Login() {
                             className="bg-transparent border-b dark:border-gray-200 focus:outline-none focus:border-green-500 text-sm w-full py-2 text-white"
                             id="email"
                             placeholder="Adresse e-mail"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                           <i className="fas fa-envelope absolute top-1/2 -translate-y-1/2 right-2 opacity-80 text-white"></i>
                         </div>
@@ -50,9 +78,12 @@ function Login() {
                             className="bg-transparent border-b dark:border-gray-200 focus:outline-none focus:border-green-500 text-sm w-full py-2 text-white"
                             id="pass"
                             placeholder="Mot de passe"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                           <i className="fas fa-lock absolute top-1/2 -translate-y-1/2 right-2 opacity-80 text-white"></i>
                         </div>
+                        {error && <div className="text-red-500 mb-4">{error}</div>}
                         <div className="mb-4">
                           <Link
                             to="/forgot-password"
@@ -62,7 +93,7 @@ function Login() {
                           </Link>
                         </div>
                         <button
-                          type="button"
+                          type="submit"
                           className="bg-green-600 hover:bg-green-700 py-4 px-10 text-white hover:bg-opacity-95 duration-300 mt-4"
                         >
                           Connexion <i className="fas fa-arrow-right"></i>
