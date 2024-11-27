@@ -60,3 +60,23 @@ exports.updateEvent = async (req, res) => {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
+
+  exports.deleteEvent = async (req, res) => {
+    const { eventId } = req.params;
+  
+    try {
+      const event = await Event.findById(eventId);
+      if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+      }
+  
+      if (event.user.toString() !== req.user.id) {
+        return res.status(403).json({ message: 'You are not authorized to delete this event' });
+      }
+      await Event.deleteOne({ _id: eventId });
+  
+      res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  };
