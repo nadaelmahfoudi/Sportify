@@ -1,4 +1,3 @@
-// app.js
 const express = require('express');
 const cors = require('cors');
 const { connect, PORT } = require('./config/config'); 
@@ -8,12 +7,13 @@ const eventIdRoutes = require('./src/routes/getEventByIdRoute');
 
 const app = express();
 
+app.use('/uploads', express.static('public/uploads'));
+
 app.use(cors({
-    origin: 'http://localhost:5173', 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-  
 
 app.use(express.json());
 connect();

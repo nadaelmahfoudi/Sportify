@@ -1,35 +1,35 @@
 const Event = require('../models/Event');
+const upload = require('../../app');
 
 // Create a new event
 exports.createEvent = async (req, res) => {
-  const { title, description, date, location } = req.body;
-
-  try {
-    // Validate required fields
-    if (!title || !description || !date || !location) {
-      return res.status(400).json({ message: 'All fields are required' });
+    const { title, description, date, location } = req.body;
+  
+    try {
+      // Validation des champs
+      if (!title || !description || !date || !location) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+  
+      const event = new Event({
+        title,
+        description,
+        date,
+        location,
+        user: req.user.id,
+        image: req.file ? `/uploads/${req.file.filename}` : '',  
+      });
+  
+      const savedEvent = await event.save();
+      res.status(201).json({
+        message: 'Event created successfully',
+        event: savedEvent,
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
     }
-
-    // Create a new event
-    const event = new Event({
-      title,
-      description,
-      date,
-      location,
-      user: req.user.id, 
-    });
-
-    // Save the event in the database
-    const savedEvent = await event.save();
-
-    res.status(201).json({
-      message: 'Event created successfully',
-      event: savedEvent,
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  };
+  
 
 exports.getAllEvents = async (req, res) => {
     try {
@@ -58,7 +58,7 @@ exports.getAllEvents = async (req, res) => {
     }
   };
   
-exports.updateEvent = async (req, res) => {
+  exports.updateEvent = async (req, res) => {
     const { title, description, date, location } = req.body;
     const { eventId } = req.params;
   
@@ -76,9 +76,11 @@ exports.updateEvent = async (req, res) => {
       if (description) event.description = description;
       if (date) event.date = date;
       if (location) event.location = location;
+      if (req.file) {
+        event.image = `/uploads/${req.file.filename}`;
+      }
   
       const updatedEvent = await event.save();
-  
       res.status(200).json({
         message: 'Event updated successfully',
         event: updatedEvent,
@@ -87,7 +89,7 @@ exports.updateEvent = async (req, res) => {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
-
+  
   exports.deleteEvent = async (req, res) => {
     const { eventId } = req.params;
   
