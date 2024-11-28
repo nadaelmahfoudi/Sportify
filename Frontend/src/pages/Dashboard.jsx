@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Sidebar from '../components/SideBare';
@@ -8,6 +9,7 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -32,7 +34,7 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p>Bienvenue dans votre application !</p>
           <button
-            type="submit"
+            onClick={() => navigate('/add-event')}
             className="my-4 block bg-green-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
           >
             Add Event
