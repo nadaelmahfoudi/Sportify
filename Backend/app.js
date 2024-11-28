@@ -4,6 +4,7 @@ const cors = require('cors');
 const { connect, PORT } = require('./config/config'); 
 const authRoutes = require('./src/routes/auth');
 const eventRoutes = require('./src/routes/eventRoutes');
+const eventIdRoutes = require('./src/routes/getEventByIdRoute');
 
 const app = express();
 
@@ -19,6 +20,7 @@ connect();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/event', eventIdRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {
