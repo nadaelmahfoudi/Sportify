@@ -9,8 +9,10 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch events from backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -24,6 +26,28 @@ const Dashboard = () => {
     };
     fetchEvents();
   }, []);
+
+  // Handle Delete event
+  const handleDelete = async (eventId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No token found, please login again');
+        return;
+      }
+  
+      const response = await axios.delete(`http://localhost:5000/api/events/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMessage(response.data.message);
+      setEvents(events.filter(event => event._id !== eventId)); // Remove the deleted event from state
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete event');
+    }
+  };
+  
 
   return (
     <div>
@@ -77,12 +101,17 @@ const Dashboard = () => {
                         >
                           Edit
                         </a>
-                        <a
-                          href="#"
-                          className="inline-block ml-2 rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-red-700"
-                        >
-                          Delete
-                        </a>
+                            {error && <p className="text-red-500">{error}</p>}
+                            {message && <p className="text-green-500">{message}</p>}
+
+                            {/* Delete Button */}
+                            <a
+                                href="#"
+                                onClick={() => handleDelete(event._id)} // Pass eventId here
+                                className="inline-block ml-2 rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-red-700"
+                            >
+                                Delete
+                            </a>
                       </td>
                     </tr>
                   ))}
