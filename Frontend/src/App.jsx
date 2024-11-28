@@ -5,6 +5,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import AddEvent from './pages/Events/AddEvent';
+import EditEvent from './pages/Events/EditEvent'; 
+
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} /> 
         <Route path="/dashboard" element={<Dashboard />} /> 
         <Route path="/add-event" element={<AddEvent />} />
+        <Route path="/edit-event/:eventId" element={<EditEvent />} />
       </Routes>
     </Router>
   );

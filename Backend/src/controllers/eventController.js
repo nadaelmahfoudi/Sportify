@@ -34,17 +34,30 @@ exports.createEvent = async (req, res) => {
 exports.getAllEvents = async (req, res) => {
     try {
       const events = await Event.find();
-  
       res.status(200).json({
         message: 'Events retrieved successfully',
         events,
       });
     } catch (error) {
+      console.error('Error retrieving events:', error); // Log de l'erreur
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  };  
+  
+  exports.getEventById = async (req, res) => {
+    const { eventId } = req.params;
+    try {
+        const event = await Event.findById(eventId);
+        
+      if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+      }
+      res.status(200).json(event);
+    } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
   
-
 exports.updateEvent = async (req, res) => {
     const { title, description, date, location } = req.body;
     const { eventId } = req.params;

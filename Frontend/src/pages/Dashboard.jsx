@@ -72,7 +72,7 @@ const Dashboard = () => {
                           View
                         </a>
                         <a
-                          href="#"
+                          onClick={() => navigate(`/edit-event/${event._id}`)}
                           className="inline-block ml-2 rounded bg-blue-500 px-4 py-2 text-xs font-medium text-white hover:bg-blue-700"
                         >
                           Edit
