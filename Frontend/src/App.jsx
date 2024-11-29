@@ -8,6 +8,7 @@ import AddEvent from './pages/Events/AddEvent';
 import EditEvent from './pages/Events/EditEvent'; 
 import Subscribers from './pages/Participants/Subscribers';
 import AddParticipant from './pages/Participants/AddParticipant';
+import EditParticipant from './pages/Participants/EditParticipant';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/edit-event/:eventId" element={<EditEvent />} />
         <Route path="/subscribers" element={<Subscribers />} />
         <Route path="/add-participant" element={<AddParticipant />} />
+        <Route path="/edit-participant/:participantId" element={<EditParticipant />} />
       </Routes>
     </Router>
   );
