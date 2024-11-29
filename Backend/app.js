@@ -4,6 +4,7 @@ const { connect, PORT } = require('./config/config');
 const authRoutes = require('./src/routes/auth');
 const eventRoutes = require('./src/routes/eventRoutes');
 const eventIdRoutes = require('./src/routes/getEventByIdRoute');
+const participantRoutes = require('./src/routes/participantRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ connect();
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/event', eventIdRoutes);
+app.use('/api/participants', participantRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {

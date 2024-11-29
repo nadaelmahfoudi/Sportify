@@ -6,6 +6,8 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import AddEvent from './pages/Events/AddEvent';
 import EditEvent from './pages/Events/EditEvent'; 
+import Subscribers from './pages/Participants/Subscribers';
+import AddParticipant from './pages/Participants/AddParticipant';
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} /> 
         <Route path="/add-event" element={<AddEvent />} />
         <Route path="/edit-event/:eventId" element={<EditEvent />} />
+        <Route path="/subscribers" element={<Subscribers />} />
+        <Route path="/add-participant" element={<AddParticipant />} />
       </Routes>
     </Router>
   );

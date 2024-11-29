@@ -37,7 +37,7 @@ const AddEvent = () => {
       const response = await axios.post('http://localhost:5000/api/events/create', formDataToSend, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data',  // Set the correct header for file upload
+          'Content-Type': 'multipart/form-data', 
         },
       });
       setMessage(response.data.message);
