@@ -65,6 +65,20 @@ const Subscribers = () => {
                       <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                         {participant.event.title}
                       </td>
+                      <td className="whitespace-nowrap px-4 py-2">
+                        <a
+                          href="#"
+                          className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                        >
+                          View
+                        </a>
+                        <a
+                          onClick={() => navigate(`/edit-participant/${participant._id}`)}
+                          className="inline-block ml-2 rounded bg-blue-500 px-4 py-2 text-xs font-medium text-white hover:bg-blue-700"
+                        >
+                          Edit
+                        </a>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
