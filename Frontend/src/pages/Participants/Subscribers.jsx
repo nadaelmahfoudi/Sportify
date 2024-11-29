@@ -27,6 +27,32 @@ const Subscribers = () => {
     fetchParticipants();
   }, []);
 
+  const handleDelete = async (participantId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No token found, please login again');
+        return;
+      }
+  
+      const response = await axios.delete(`http://localhost:5000/api/participants/${participantId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      // Show success message
+      setMessage(response.data.message);
+  
+      // Update the state to remove the deleted participant
+      setParticipants(participants.filter(participant => participant._id !== participantId));
+  
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete participant');
+    }
+  };
+  
+
   return (
     <div>
       <Navbar />
@@ -78,6 +104,17 @@ const Subscribers = () => {
                         >
                           Edit
                         </a>
+                        {error && <p className="text-red-500">{error}</p>}
+                            {message && <p className="text-green-500">{message}</p>}
+
+                            {/* Delete Button */}
+                            <a
+                                href="#"
+                                onClick={() => handleDelete(participant._id)}
+                                className="inline-block ml-2 rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-red-700"
+                            >
+                                Delete
+                            </a>
                       </td>
                     </tr>
                   ))}

@@ -77,3 +77,22 @@ exports.getParticipants = async (req, res) => {
       res.status(500).json({ message: 'Error retrieving participant', error: error.message });
     }
   };
+
+  exports.deleteParticipant = async (req, res) => {
+    const { participantId } = req.params; // Get participantId from URL
+  
+    try {
+      // Find and delete the participant by ID
+      const participant = await Participant.findByIdAndDelete(participantId);
+  
+      if (!participant) {
+        return res.status(404).json({ message: 'Participant not found' });
+      }
+  
+      res.status(200).json({ message: 'Participant deleted successfully' });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error deleting participant', error: error.message });
+    }
+  };
