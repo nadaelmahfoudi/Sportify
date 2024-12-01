@@ -96,3 +96,20 @@ exports.getParticipants = async (req, res) => {
       res.status(500).json({ message: 'Error deleting participant', error: error.message });
     }
   };
+
+  exports.getParticipantsByEvent = async (req, res) => {
+    try {
+      const { eventId } = req.params; 
+      const event = await Event.findById(eventId);
+      if (!event) {
+        return res.status(404).json({ message: 'Événement non trouvé' });
+      }
+  
+      const participants = await Participant.find({ event: eventId }).populate('event');
+      
+      res.status(200).json({ event: event.title, participants });
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la récupération des participants', error: error.message });
+    }
+  };
+  

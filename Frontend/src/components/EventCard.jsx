@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const EventCard = ({ event }) => {
   return (
@@ -19,12 +20,12 @@ const EventCard = ({ event }) => {
             <span>At <span>{new Date(event.date).toLocaleDateString()}</span></span>
           </p>
           <p className="opacity-60 mt-3 mb-8">{event.description}</p>
-          <a
-            href={`/events/${event.id}`}
-            className="bg-transparent hover:bg-blue-600 border border-blue-600 hover:text-white py-2 px-5 rounded transition"
-          >
-            Read More
-          </a>
+          <Link
+              to={`/${event._id}/participants`}
+              className="bg-transparent hover:bg-blue-600 border border-blue-600 hover:text-white py-2 px-5 rounded transition"
+            >
+              Liste des participants
+            </Link>
         </div>
       </article>
     </div>
