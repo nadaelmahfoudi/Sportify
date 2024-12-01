@@ -6,10 +6,12 @@ const eventRoutes = require('./src/routes/eventRoutes');
 const eventIdRoutes = require('./src/routes/getEventByIdRoute');
 const participantRoutes = require('./src/routes/participantRoutes');
 const participantIdRoutes = require('./src/routes/getParticipantId');
+const path = require('path');
 
 const app = express();
 
-app.use('/uploads', express.static('public/uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 
 app.use(cors({
   origin: 'http://localhost:5173',

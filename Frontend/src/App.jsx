@@ -9,6 +9,7 @@ import EditEvent from './pages/Events/EditEvent';
 import Subscribers from './pages/Participants/Subscribers';
 import AddParticipant from './pages/Participants/AddParticipant';
 import EditParticipant from './pages/Participants/EditParticipant';
+import EventList from './pages/Events/EventList';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/subscribers" element={<Subscribers />} />
         <Route path="/add-participant" element={<AddParticipant />} />
         <Route path="/edit-participant/:participantId" element={<EditParticipant />} />
+        <Route path="/event-list" element={<EventList />} />
       </Routes>
     </Router>
   );
