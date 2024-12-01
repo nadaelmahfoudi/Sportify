@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { jsPDF } from 'jspdf';  // Import de jsPDF
 
 const ParticipantList = () => {
   const { eventId } = useParams();
@@ -22,6 +23,24 @@ const ParticipantList = () => {
     fetchParticipants();
   }, [eventId]);
 
+  // Fonction pour générer le PDF
+  const generatePDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text('Liste des Participants', 20, 20);
+    
+    doc.setFontSize(12);
+    let yPosition = 30;
+
+    participants.forEach((participant, index) => {
+      doc.text(`${index + 1}. ${participant.name} - ${participant.phoneNumber}`, 20, yPosition);
+      yPosition += 10;
+    });
+
+    doc.save('participants.pdf');
+  };
+
   if (loading) return <p className="text-center mt-10 text-xl font-semibold">Chargement des participants...</p>;
   if (error) return <p className="text-center mt-10 text-xl text-red-500 font-semibold">Erreur: {error}</p>;
 
@@ -41,25 +60,33 @@ const ParticipantList = () => {
             {participants.length === 0 ? (
               <p className="text-center text-lg font-medium">Aucun participant trouvé.</p>
             ) : (
-              participants.map((participant) => (
-                <div
-                  key={participant._id}
-                  className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out mt-6"
+              <>
+                <button
+                  onClick={generatePDF}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-md mb-6 hover:bg-blue-700 transition duration-200"
                 >
-                  <div className="flex items-center justify-between p-4 md:p-6">
-                    <div>
-                      <h4 className=" block text-2xl font-semibold text-gray-800 dark:text-white">
-                        {participant.name}
-                      </h4>
-                      <div className="flex flex-wrap mt-2">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Téléphone : {participant.phoneNumber}
-                        </p>
+                  Télécharger la Liste en PDF
+                </button>
+                {participants.map((participant) => (
+                  <div
+                    key={participant._id}
+                    className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out mt-6"
+                  >
+                    <div className="flex items-center justify-between p-4 md:p-6">
+                      <div>
+                        <h4 className="block text-2xl font-semibold text-gray-800 dark:text-white">
+                          {participant.name}
+                        </h4>
+                        <div className="flex flex-wrap mt-2">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Téléphone : {participant.phoneNumber}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </>
             )}
           </div>
         </div>
