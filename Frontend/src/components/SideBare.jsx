@@ -2,9 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 const Sidebar = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Supprimer le token du localStorage
+    localStorage.removeItem('token');  
+    navigate('/');
+  };
+
   return (
-    <div className="flex h-screen flex-col justify-between border-e bg-white ">
+    <div className="flex h-screen flex-col justify-between border-e bg-white">
       <div className="px-4 py-6">
         <ul className="mt-6 space-y-1">
           <li>
@@ -18,7 +25,6 @@ const Sidebar = () => {
               Subscribers
             </a>
           </li>
-
 
           <li>
             <details className="group [&_summary::-webkit-details-marker]:hidden">
@@ -36,8 +42,12 @@ const Sidebar = () => {
               </summary>
               <ul className="mt-2 space-y-1 px-4">
                 <li>
-                  <form action="#">
-                    <button type="submit" className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                  <form action="#" onSubmit={(e) => e.preventDefault()}>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    >
                       Logout
                     </button>
                   </form>
