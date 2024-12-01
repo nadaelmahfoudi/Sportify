@@ -5,19 +5,18 @@ const upload = require('../../app');
 exports.createEvent = async (req, res) => {
     const { title, description, date, location } = req.body;
   
-    try {
-      // Validation des champs
-      if (!title || !description || !date || !location) {
-        return res.status(400).json({ message: 'All fields are required' });
-      }
+    if (!title || !description || !date || !location) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
   
+    try {
       const event = new Event({
         title,
         description,
         date,
         location,
         user: req.user.id,
-        image: req.file ? `/uploads/${req.file.filename}` : '',  
+        image: req.file ? `/uploads/${req.file.filename}` : '', // Handle file upload if present
       });
   
       const savedEvent = await event.save();
@@ -62,6 +61,11 @@ exports.getAllEvents = async (req, res) => {
     const { title, description, date, location } = req.body;
     const { eventId } = req.params;
   
+    // Check for missing required fields
+    if (!title || !description || !date || !location) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+  
     try {
       const event = await Event.findById(eventId);
       if (!event) {
@@ -72,6 +76,7 @@ exports.getAllEvents = async (req, res) => {
         return res.status(403).json({ message: 'You are not authorized to update this event' });
       }
   
+      // Update event fields only if they are provided
       if (title) event.title = title;
       if (description) event.description = description;
       if (date) event.date = date;
@@ -89,6 +94,7 @@ exports.getAllEvents = async (req, res) => {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
+  
   
   exports.deleteEvent = async (req, res) => {
     const { eventId } = req.params;

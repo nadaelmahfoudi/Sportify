@@ -9,15 +9,15 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
-    // Vérifier le token
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attacher l'utilisateur au `req`
+    // Attach user information to the request object
     req.user = { id: decoded.id };
 
-    next(); // Passer au contrôleur suivant
+    next(); // Continue to the next middleware/controller
   } catch (error) {
-    res.status(401).json({ message: 'Invalid token.' });
+    return res.status(401).json({ message: 'Invalid token.' });
   }
 };
 
