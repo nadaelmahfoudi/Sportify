@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Sidebar from '../../components/SideBare';
 import { useNavigate } from 'react-router-dom';
+import validateParticipant from '../../validations/validateParticipant'; // Adjust path as necessary
 
 const AddParticipant = () => {
   const [name, setName] = useState('');
@@ -12,51 +13,54 @@ const AddParticipant = () => {
   const [events, setEvents] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   const navigate = useNavigate();
 
-
-  // Fetch events on component mount
   useEffect(() => {
     const fetchEvents = async () => {
-        try {
-          const response = await axios.get('http://localhost:5000/api/events/events');
-          console.log(response.data); // Debug the response
-          setEvents(response.data.events);
-        } catch (err) {
-          console.error(err); // Log the error
-          setError('Failed to fetch events');
-        }
-      };
-      
+      try {
+        const response = await axios.get('http://localhost:5000/api/events/events');
+        setEvents(response.data.events);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch events');
+      }
+    };
+
     fetchEvents();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    const validationErrors = validateParticipant({ name, phoneNumber, eventName });
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:5000/api/participants/add', {
-        name,
-        phoneNumber,
-        eventName,
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json', 
-        },
-      });
+      const response = await axios.post(
+        'http://localhost:5000/api/participants/add',
+        { name, phoneNumber, eventName },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       setMessage(response.data.message);
       setName('');
       setPhoneNumber('');
       setEventName('');
+      setFormErrors({});
       setTimeout(() => navigate('/subscribers'), 1000);
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || 'Failed to add participant');
     }
   };
-  
+
   return (
     <div>
       <Navbar />
@@ -73,9 +77,9 @@ const AddParticipant = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
                 className="w-full px-4 py-2 border rounded-md"
               />
+              {formErrors.name && <p className="text-red-500">{formErrors.name}</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Phone Number</label>
@@ -83,30 +87,29 @@ const AddParticipant = () => {
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                required
                 className="w-full px-4 py-2 border rounded-md"
               />
+              {formErrors.phoneNumber && <p className="text-red-500">{formErrors.phoneNumber}</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Event</label>
               <select
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                required
                 className="w-full px-4 py-2 border rounded-md"
-                >
+              >
                 <option value="">Select an event</option>
                 {events.length > 0 ? (
-                    events.map((event) => (
+                  events.map((event) => (
                     <option key={event._id} value={event.title}>
-                        {event.title}
+                      {event.title}
                     </option>
-                    ))
+                  ))
                 ) : (
-                    <option disabled>No events available</option>
+                  <option disabled>No events available</option>
                 )}
               </select>
-
+              {formErrors.eventName && <p className="text-red-500">{formErrors.eventName}</p>}
             </div>
             <button
               type="submit"
@@ -115,6 +118,12 @@ const AddParticipant = () => {
               Add Participant
             </button>
           </form>
+          <button
+          onClick={() => navigate('/dashboard')}
+          className="my-4 block bg-indigo-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
+        >
+          Retour!
+        </button>
         </div>
       </div>
       <Footer />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';  // Import de jsPDF
 
 const ParticipantList = () => {
@@ -8,6 +8,7 @@ const ParticipantList = () => {
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -91,6 +92,12 @@ const ParticipantList = () => {
           </div>
         </div>
       </div>
+      <button
+            onClick={() => navigate('/dashboard')}
+            className="my-4 block bg-indigo-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
+          >
+            Retour !
+          </button>
     </section>
   );
 };

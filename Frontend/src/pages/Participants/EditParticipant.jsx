@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Sidebar from '../../components/SideBare';
 import { useNavigate, useParams } from 'react-router-dom';
+import validateParticipant from '../../validations/validateParticipant'; // Import validation
 
 const EditParticipant = () => {
   const [name, setName] = useState('');
@@ -12,17 +13,16 @@ const EditParticipant = () => {
   const [events, setEvents] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   const navigate = useNavigate();
-  const { participantId } = useParams(); // Get the participantId from the URL
+  const { participantId } = useParams(); 
 
-  // Fetch events on component mount
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/events/events');
         setEvents(response.data.events);
       } catch (err) {
-        console.error(err);
         setError('Failed to fetch events');
       }
     };
@@ -35,7 +35,6 @@ const EditParticipant = () => {
         setPhoneNumber(phoneNumber);
         setEventName(event.title);
       } catch (err) {
-        console.error(err);
         setError('Failed to fetch participant');
       }
     };
@@ -47,23 +46,29 @@ const EditParticipant = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errors = validateParticipant({ name, phoneNumber, eventName });
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length > 0) return;
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/participants/${participantId}`, {
-        name,
-        phoneNumber,
-        eventName,
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
+      const response = await axios.put(
+        `http://localhost:5000/api/participants/${participantId}`,
+        {
+          name,
+          phoneNumber,
+          eventName,
         },
-      });
-
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       setMessage(response.data.message);
-      setTimeout(() => navigate('/subscribers'), 1000); // Redirect after successful update
+      setTimeout(() => navigate('/subscribers'), 1000);
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.message || 'Failed to update participant');
     }
   };
@@ -84,9 +89,11 @@ const EditParticipant = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full px-4 py-2 border rounded-md"
+                className={`w-full px-4 py-2 border rounded-md ${
+                  formErrors.name ? 'border-red-500' : ''
+                }`}
               />
+              {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Phone Number</label>
@@ -94,37 +101,45 @@ const EditParticipant = () => {
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                required
-                className="w-full px-4 py-2 border rounded-md"
+                className={`w-full px-4 py-2 border rounded-md ${
+                  formErrors.phoneNumber ? 'border-red-500' : ''
+                }`}
               />
+              {formErrors.phoneNumber && (
+                <p className="text-red-500 text-sm">{formErrors.phoneNumber}</p>
+              )}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Event</label>
               <select
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                required
-                className="w-full px-4 py-2 border rounded-md"
+                className={`w-full px-4 py-2 border rounded-md ${
+                  formErrors.eventName ? 'border-red-500' : ''
+                }`}
               >
                 <option value="">Select an event</option>
-                {events.length > 0 ? (
-                  events.map((event) => (
-                    <option key={event._id} value={event.title}>
-                      {event.title}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>No events available</option>
-                )}
+                {events.map((event) => (
+                  <option key={event._id} value={event.title}>
+                    {event.title}
+                  </option>
+                ))}
               </select>
+              {formErrors.eventName && <p className="text-red-500 text-sm">{formErrors.eventName}</p>}
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             >
               Update Participant
             </button>
           </form>
+          <button
+          onClick={() => navigate('/dashboard')}
+          className="my-4 block bg-indigo-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
+        >
+          Retour!
+        </button>
         </div>
       </div>
       <Footer />

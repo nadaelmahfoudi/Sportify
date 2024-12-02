@@ -65,7 +65,7 @@ const Dashboard = () => {
           </button>
           <button
             onClick={() => navigate('/event-list')}
-            className="my-4 block bg-green-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
+            className="my-4 block bg-blue-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
           >
             Event List
           </button>

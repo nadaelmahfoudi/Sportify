@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import validateEvent from '../../validations/validateEvent'; // Import the validation function
 
 const EditEvent = () => {
   const { eventId } = useParams();
@@ -10,7 +11,7 @@ const EditEvent = () => {
     description: '',
     date: '',
     location: '',
-    image: '', // Nouvelle propriété pour l'image
+    image: '',
   });
   const [previewImage, setPreviewImage] = useState('');
   const [message, setMessage] = useState('');
@@ -48,6 +49,14 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate the form data
+    const validationErrors = validateEvent(formData);
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(', '));
+      return;
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
     formDataToSend.append('description', formData.description);
@@ -128,6 +137,12 @@ const EditEvent = () => {
           Update Event
         </button>
       </form>
+      <button
+        onClick={() => navigate('/dashboard')}
+        className="my-4 block bg-indigo-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
+      >
+        Retour !
+      </button>
     </div>
   );
 };

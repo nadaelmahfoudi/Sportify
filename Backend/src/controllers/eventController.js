@@ -1,4 +1,5 @@
 const Event = require('../models/Event');
+const Participant = require('../models/Participant');
 const upload = require('../../app');
 
 // Create a new event
@@ -108,6 +109,7 @@ exports.getAllEvents = async (req, res) => {
       if (event.user.toString() !== req.user.id) {
         return res.status(403).json({ message: 'You are not authorized to delete this event' });
       }
+      await Participant.deleteMany({ event: eventId });
       await Event.deleteOne({ _id: eventId });
   
       res.status(200).json({ message: 'Event deleted successfully' });
