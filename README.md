@@ -23,13 +23,13 @@ L'application vise à simplifier et sécuriser le processus d'inscription, en pr
 ## Technologies Utilisées
 
 ### Back-end :
-- **Node.js** (Express.js ou NestJS)
+- **Express.js** 
 - **MongoDB** avec **Mongoose**
 - **JWT** pour l'authentification
 - **Tests Unitaires** avec Jest
 
 ### Front-end :
-- **React.js** avec gestion d'état via **Redux** ou **Context API**
+- **React.js** 
 - **React Router** pour la gestion des routes protégées
 
 ### Déploiement :
@@ -41,7 +41,7 @@ L'application vise à simplifier et sécuriser le processus d'inscription, en pr
 
 1. **Clonez le dépôt :**
    ```bash
-   git clone https://github.com/VOTRE_COMPTE/sportify.git
+   git clone https://github.com/nadaelmahfoudi/sportify.git
 ## Accédez au répertoire :
 
 ```bash
