@@ -1,5 +1,4 @@
 import React from 'react';
-import Delivery from '../assets/Delivery.svg';
 import Sport from '../assets/Sport.svg';
 function Container() {
   return (

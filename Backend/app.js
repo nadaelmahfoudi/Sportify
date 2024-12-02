@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { connect } = require('./config/config');
 const authRoutes = require('./src/routes/auth');
 const eventRoutes = require('./src/routes/eventRoutes');
 const eventIdRoutes = require('./src/routes/getEventByIdRoute');
@@ -20,7 +19,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-connect();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
