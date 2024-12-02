@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import EventCard from '../../components/EventCard';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -36,6 +38,12 @@ const EventList = () => {
             <EventCard key={event._id} event={event} />
           ))}
         </div>
+        <button
+            onClick={() => navigate('/dashboard')}
+            className="my-4 block bg-indigo-600 border text-white px-8 py-2 hover:opacity-90 rounded-md"
+          >
+            Retour !
+          </button>
       </div>
     </section>
   );
