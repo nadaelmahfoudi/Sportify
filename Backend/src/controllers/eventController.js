@@ -17,7 +17,7 @@ exports.createEvent = async (req, res) => {
         date,
         location,
         user: req.user.id,
-        image: req.file ? `/uploads/${req.file.filename}` : '', // Handle file upload if present
+        image: req.file ? `/uploads/${req.file.filename}` : '', 
       });
   
       const savedEvent = await event.save();

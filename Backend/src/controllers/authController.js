@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h', // Token valable 1 heure
+      expiresIn: '4d',
     });
 
     // Répondre avec les données utilisateur et le token

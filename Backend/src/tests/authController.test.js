@@ -132,6 +132,6 @@ describe('Auth Controller', () => {
   });
 });
 
-afterAll(async () => {
-    await mongoose.connection.close(); // Assurez-vous de fermer MongoDB après les tests.
-  });
+// afterAll(async () => {
+//     await mongoose.connection.close(); // Assurez-vous de fermer MongoDB après les tests.
+//   });
